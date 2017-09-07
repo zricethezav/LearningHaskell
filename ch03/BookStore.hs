@@ -1,5 +1,5 @@
 -- file: ch03/BookStore.hs
-data BookInfo = Book Int String [String]
+data Book = Book Int String [String]
                 deriving (Show)
 
 data MagazineInfo = Magazine Int String [String]
@@ -11,7 +11,7 @@ data StoreSign = Sign String [Int]
 -- The type BookReview also has a value constructor named BookReview.
 -- Having both the type constructor the same name as the value constructor
 -- is the convention in Haskell.
-data BookReview = BookReview BookInfo String String
+data BookReview = BookReview Book String String
 
 myInfo = Book 9801 "Algebra of Programming"
          ["Richard Bird", "Oege de Moor"]
@@ -26,7 +26,7 @@ storeSign = Sign "Zach's Store" [12, 14]
 type CustomerID = Int
 type ReviewBody = String
 
-data BetterReview = BetterReview BookInfo CustomerID ReviewBody
+data BetterReview = BetterReview Book CustomerID ReviewBody
                     deriving (Show)
 
 -- Type Synonyms are purely for making code more readable.
@@ -55,4 +55,29 @@ nicerID      (Book id _     _      ) = id
 nicerTitle   (Book _  title _      ) = title
 nicerAuthors (Book _  _     authors) = authors
 
+-- ^^ above code is referred to as 'accessor functions'
+-- accessor functions are bulky and boilerplate and there is an easier way to do
+-- it. Fortunately, the language addresses this particular boilerplate problem:
+-- we can define a data type, and accessors for each of its components,
+-- simultaneously
+-- vv below code is nice and concise
+data Customer = Customer {
+    customerID      :: CustomerID,
+    customerName    :: String,
+    customerAddress :: Address
+} deriving (Show)
 
+-- same syntax for creating values of Customer type
+customer1 = Customer 271828 "J.R. Hacker"
+            ["255 Syntax Ct",
+             "Milpitas, CA 95134",
+             "USA"]
+
+-- below is an example of 'Record Syntax'
+customer2 = Customer {
+              customerID = 271828
+            , customerAddress = ["1048576 Disk Drive",
+                                 "Milpitas, CA 95134",
+                                 "USA"]
+            , customerName = "Jane Q. Citizen"
+            }
